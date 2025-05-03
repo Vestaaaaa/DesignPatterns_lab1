@@ -1,16 +1,3 @@
-/*import Point from "./Point.js";
-import Triangle from "./Triangle.js";
-
-export default class ShapeFactory {
-  static createPoint(x: number, y: number): Point {
-    return new Point(x, y);
-  }
-
-  static createTriangle(pointA: Point, pointB: Point, pointC: Point): Triangle {
-    return new Triangle(pointA, pointB, pointC);
-  }
-}*/
-
 import Point from "./Point.js";
 import Triangle from "./Triangle.js";
 import Cone from "./Cone.js";

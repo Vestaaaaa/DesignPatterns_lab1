@@ -4,7 +4,7 @@ import ShapeFactory from "./ShapeFactory.js";
 import logger from "./Logger.js";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
-import ConeValidator from "./ConeValidator.js";
+import ShapeValidator from "./ShapeValidator.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -76,7 +76,7 @@ fs.readFile(dataFilePath, "utf8", (err, data) => {
           coneId
         );
 
-        if (!ConeValidator.isValid(cone)) {
+        if (!ShapeValidator.isValidCone(cone)) {
           logger.warn(`Invalid cone parameters in line: ${line}`);
           return;
         }
