@@ -5,11 +5,14 @@ import logger from "./Logger.js";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
 import ShapeValidator from "./ShapeValidator.js";
+import Warehouse from "./Warehouse.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const dataFilePath = path.join(__dirname, "..", "data", "shapes.txt");
+
+const warehouse = new Warehouse();
 
 fs.readFile(dataFilePath, "utf8", (err, data) => {
   if (err) {
@@ -32,7 +35,12 @@ fs.readFile(dataFilePath, "utf8", (err, data) => {
         const pointB = ShapeFactory.createPoint(x2, y2);
         const pointC = ShapeFactory.createPoint(x3, y3);
 
-        const triangle = ShapeFactory.createTriangle(pointA, pointB, pointC);
+        const triangle = ShapeFactory.createTriangle(
+          pointA,
+          pointB,
+          pointC,
+          warehouse
+        );
 
         if (triangle.isCollinear()) {
           logger.warn(
@@ -71,6 +79,7 @@ fs.readFile(dataFilePath, "utf8", (err, data) => {
         const cone = ShapeFactory.createCone(
           apex,
           baseCenter,
+          warehouse,
           nums[6],
           nums[7],
           coneId

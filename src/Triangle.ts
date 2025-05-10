@@ -1,14 +1,18 @@
 import Point from "./Point.js";
+import { Observer } from "./Observer.js";
+import Warehouse from "./Warehouse.js";
 
-export default class Triangle {
+export default class Triangle implements Observer {
   public id: string;
 
   constructor(
     public pointA: Point,
     public pointB: Point,
-    public pointC: Point
+    public pointC: Point,
+    private warehouse: Warehouse
   ) {
     this.id = `${pointA.x},${pointA.y}-${pointB.x},${pointB.y}-${pointC.x},${pointC.y}`;
+    this.notifyAreaUpdate(); // Уведомляем о начальной площади
   }
 
   getArea(): number {
@@ -17,6 +21,19 @@ export default class Triangle {
     const { x: x3, y: y3 } = this.pointC;
 
     return Math.abs((x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2)) / 2);
+  }
+
+  updatePoints(pointA?: Point, pointB?: Point, pointC?: Point): void {
+    if (pointA) this.pointA = pointA;
+    if (pointB) this.pointB = pointB;
+    if (pointC) this.pointC = pointC;
+
+    this.notifyAreaUpdate(); // Уведомляем об изменении площади
+  }
+
+  private notifyAreaUpdate(): void {
+    const area = this.getArea();
+    this.warehouse.updateArea(this.id, area);
   }
 
   getPerimeter(): number {
@@ -60,6 +77,16 @@ export default class Triangle {
       this.getDistance(this.pointC, this.pointA),
     ];
 
-    return new Set(sides).size < 3;
+    return (
+      sides[0] === sides[1] || sides[1] === sides[2] || sides[0] === sides[2]
+    );
+  }
+
+  updateArea(id: string, area: number): void {
+    console.log(`Triangle ${id} area updated to ${area}`);
+  }
+
+  updateVolume(id: string, volume: number): void {
+    console.log(`Triangle ${id} volume cannot be updated as it has no volume.`);
   }
 }

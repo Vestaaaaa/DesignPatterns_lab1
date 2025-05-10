@@ -1,6 +1,7 @@
 import Cone from "../src/Cone";
 import Point from "../src/Point";
 import ShapeValidator from "../src/ShapeValidator";
+import Warehouse from "../src/Warehouse";
 
 describe("Cone", () => {
   const apex = new Point(0, 0, 10);
@@ -8,9 +9,10 @@ describe("Cone", () => {
   const height = 10;
   const radius = 5;
   const id = "cone1";
+  const warehouse = new Warehouse();
 
   test("should create a cone instance with correct properties", () => {
-    const cone = new Cone(id, apex, baseCenter, height, radius);
+    const cone = new Cone(id, apex, baseCenter, warehouse, height, radius);
 
     expect(cone.id).toBe(id);
     expect(cone.apex).toBe(apex);
@@ -21,7 +23,7 @@ describe("Cone", () => {
 
   // Тест на вычисление объема конуса
   test("should calculate the volume of the cone correctly", () => {
-    const cone = new Cone(id, apex, baseCenter, height, radius);
+    const cone = new Cone(id, apex, baseCenter, warehouse, height, radius);
 
     const volume = cone.getVolume();
 
@@ -32,7 +34,7 @@ describe("Cone", () => {
 
   // Тест на проверку валидности конуса
   test("should validate the cone correctly", () => {
-    const validCone = new Cone(id, apex, baseCenter, height, radius);
+    const validCone = new Cone(id, apex, baseCenter, warehouse, height, radius);
 
     const isValid = ShapeValidator.isValidCone(validCone);
 
@@ -43,6 +45,7 @@ describe("Cone", () => {
       id + "invalidHeight",
       apex,
       baseCenter,
+      warehouse,
       -5,
       radius
     );
@@ -53,6 +56,7 @@ describe("Cone", () => {
       id + "invalidRadius",
       apex,
       baseCenter,
+      warehouse,
       height,
       0
     );
@@ -64,6 +68,7 @@ describe("Cone", () => {
       id + "invalidBase",
       apex,
       invalidBaseCenter,
+      warehouse,
       height,
       radius
     );

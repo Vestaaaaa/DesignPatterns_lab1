@@ -28,26 +28,20 @@ export default class ShapeValidator {
   }
 
   static isValidCone(cone: Cone): boolean {
-    if (!cone) return false;
-    if (!(cone.apex && cone.baseCenter)) return false;
+    if (!cone || !cone.apex || !cone.baseCenter) return false;
 
     try {
-      this.validateHeight(cone.height);
+      ShapeValidator.validateHeight(cone.height);
+      ShapeValidator.validateRadius(cone.radius);
     } catch (error) {
       return false;
     }
 
-    try {
-      this.validateRadius(cone.radius);
-    } catch (error) {
-      return false;
-    }
-
-    // Проверка, что основание находится на одной из координатных плоскостей (XY, YZ или XZ)
-    const baseZIsZero = cone.baseCenter.z === 0;
-    const baseYIsZero = cone.baseCenter.y === 0;
-    const baseXIsZero = cone.baseCenter.x === 0;
-
-    return baseZIsZero || baseYIsZero || baseXIsZero;
+    // Проверка на плоскости
+    return (
+      cone.baseCenter.z === 0 ||
+      cone.baseCenter.y === 0 ||
+      cone.baseCenter.x === 0
+    );
   }
 }

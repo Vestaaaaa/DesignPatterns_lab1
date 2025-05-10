@@ -1,17 +1,18 @@
 import ShapeValidator from "../src/ShapeValidator";
 import Cone from "../src/Cone";
 import Point from "../src/Point";
+import Warehouse from "../src/Warehouse";
 
 describe("ShapeValidator", () => {
   // Тест validatePointData
   test("should validate point data correctly", () => {
     const validPointData = "1.5 -2.3";
     const invalidPointData = "1.5 -abc";
-    const result = ShapeValidator.validatePointData(validPointData);
 
+    // Проверка на валидные данные
+    const result = ShapeValidator.validatePointData(validPointData);
     expect(result).toEqual([1.5, -2.3]);
 
-    // Проверка на выброс ошибки для невалидных данных
     expect(() => ShapeValidator.validatePointData(invalidPointData)).toThrow(
       "Invalid point data"
     );
@@ -23,7 +24,8 @@ describe("ShapeValidator", () => {
     const invalidRadiusNegative = -3;
     const invalidRadiusZero = 0;
 
-    ShapeValidator.validateRadius(validRadius);
+    // Проверка на валидный радиус
+    expect(() => ShapeValidator.validateRadius(validRadius)).not.toThrow();
     expect(() => ShapeValidator.validateRadius(invalidRadiusNegative)).toThrow(
       "Radius must be a positive number"
     );
@@ -38,7 +40,8 @@ describe("ShapeValidator", () => {
     const invalidHeightNegative = -2;
     const invalidHeightZero = 0;
 
-    ShapeValidator.validateHeight(validHeight);
+    // Проверка на валидную высоту
+    expect(() => ShapeValidator.validateHeight(validHeight)).not.toThrow();
     expect(() => ShapeValidator.validateHeight(invalidHeightNegative)).toThrow(
       "Height must be a positive number"
     );
@@ -51,24 +54,44 @@ describe("ShapeValidator", () => {
   test("should validate cone correctly", () => {
     const apex = new Point(0, 0, 10);
     const baseCenterValid = new Point(0, 0, 0);
-    const baseCenterInvalid = new Point(1, 1, 1);
+    const warehouse = new Warehouse();
 
-    const validCone = new Cone("cone1", apex, baseCenterValid, 10, 5);
+    // Создание валидного конуса
+    const validCone = new Cone(
+      "cone1",
+      apex,
+      baseCenterValid,
+      warehouse,
+      10,
+      5
+    );
 
     expect(ShapeValidator.isValidCone(validCone)).toBe(true);
 
-    // Проверка основание не на плоскости
-    const invalidCone = new Cone("cone2", apex, baseCenterInvalid, 10, 5);
-    expect(ShapeValidator.isValidCone(invalidCone)).toBe(false);
+    // Проверка основание не на плоскости (например, z-координата не равна нулю)
+    const baseCenterInvalidZNotZero = new Point(1, 1, 1);
+
+    const invalidConeBaseNotOnPlane = new Cone(
+      "cone2",
+      apex,
+      baseCenterInvalidZNotZero,
+      warehouse,
+      10,
+      5
+    );
+
+    expect(ShapeValidator.isValidCone(invalidConeBaseNotOnPlane)).toBe(false);
 
     // Проверка на отрицательную высоту
     const coneWithInvalidHeight = new Cone(
       "cone3",
       apex,
       baseCenterValid,
+      warehouse,
       -10,
       5
     );
+
     expect(ShapeValidator.isValidCone(coneWithInvalidHeight)).toBe(false);
 
     // Проверка на радиус ноль
@@ -76,9 +99,11 @@ describe("ShapeValidator", () => {
       "cone4",
       apex,
       baseCenterValid,
+      warehouse,
       10,
       0
     );
+
     expect(ShapeValidator.isValidCone(coneWithInvalidRadius)).toBe(false);
   });
 });
